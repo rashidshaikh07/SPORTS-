@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRICSPHERE | Official Cricket Sports Hub, Live Matches, Teams & Gear</title>
+  <meta name="description" content="Ultimate Cricket Sports Platform - Live scores, tournament fixtures, team profiles, player stats, pro cricket gear, and 24/7 contact support.">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+
+  <!-- Supabase JS Client v2 -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- ============================================================
+       TOP LIVE SCORE TICKER
+       ============================================================ -->
+  <div class="live-ticker">
+    <div class="container">
+      <div class="ticker-inner">
+        <div class="ticker-label">LIVE MATCHES</div>
+        <div class="ticker-scroll">
+          <div class="ticker-item">Loading live cricket action...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       HEADER & NAVIGATION
+       ============================================================ -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-wrap">
+        <!-- Logo -->
+        <a href="index.html" class="brand-logo">
+          <div class="brand-icon">🏏</div>
+          <div class="brand-name">CRIC<span>SPHERE</span></div>
+        </a>
+
+        <!-- Desktop Menu -->
+        <nav class="nav-menu">
+          <a href="index.html" class="nav-link active">Home</a>
+          <a href="matches.html" class="nav-link">Matches & Scores</a>
+          <a href="teams.html" class="nav-link">Teams & Players</a>
+          <a href="products.html" class="nav-link">Gear & Store</a>
+          <a href="contact.html" class="nav-link">Contact & Help</a>
+        </nav>
+
+        <!-- Actions -->
+        <div class="header-actions">
+          <button class="cart-trigger" aria-label="Open Shopping Cart">
+            🛒
+            <span class="cart-badge" style="display: none;">0</span>
+          </button>
+          <a href="admin.html" class="btn btn-admin">⚙️ Admin</a>
+          <button class="mobile-nav-toggle" aria-label="Toggle navigation">☰</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       HERO SECTION
+       ============================================================ -->
+  <section class="hero-section">
+    <div class="hero-bg-overlay"></div>
+    <div class="container">
+      <div class="hero-grid">
+        <!-- Left Content -->
+        <div class="hero-content">
+          <div class="hero-tag">🏆 OFFICIAL CRICKET LEAGUE 2026</div>
+          <h1 class="hero-title">Feel the Roar of the <span class="text-gradient">Cricket Stadium</span></h1>
+          <p class="hero-desc">
+            Experience ball-by-ball live match action, tournament fixtures, comprehensive team & player statistics, and championship-grade cricket equipment designed for winners.
+          </p>
+          <div class="hero-btns">
+            <a href="matches.html" class="btn btn-primary">⚡ View Live Matches</a>
+            <a href="products.html" class="btn btn-gold">🏏 Shop Cricket Gear</a>
+          </div>
+
+          <div class="hero-stats">
+            <div class="hero-stat-item">
+              <h3>4+</h3>
+              <p>Top Franchises</p>
+            </div>
+            <div class="hero-stat-item">
+              <h3>20+</h3>
+              <p>Elite Players</p>
+            </div>
+            <div class="hero-stat-item">
+              <h3>100%</h3>
+              <p>Original Gear</p>
+            </div>
+            <div class="hero-stat-item">
+              <h3>24/7</h3>
+              <p>Match Support</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Hero Live Match Widget -->
+        <div class="hero-match-widget">
+          <div class="widget-header">
+            <span class="badge badge-live">LIVE INNINGS</span>
+            <span style="font-size: 0.85rem; color: var(--gold-400); font-weight: 700;">Premier Cup Semi-Final</span>
+          </div>
+
+          <div class="widget-teams">
+            <!-- Team 1 -->
+            <div class="team-score-row">
+              <div class="team-info">
+                <img src="https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=100" alt="Royal Strikers" class="team-avatar">
+                <div>
+                  <div class="team-name">Royal Strikers</div>
+                  <small style="color: var(--primary-400);">Current Batting</small>
+                </div>
+              </div>
+              <div class="score-info">
+                <div class="runs-overs">186/4</div>
+                <div class="overs-badge">(17.2 / 20.0 ov)</div>
+              </div>
+            </div>
+
+            <!-- Team 2 -->
+            <div class="team-score-row">
+              <div class="team-info">
+                <img src="https://images.unsplash.com/photo-1531415074868-036b1c5d53ec?w=100" alt="Thunder Titans" class="team-avatar">
+                <div>
+                  <div class="team-name">Thunder Titans</div>
+                  <small style="color: var(--text-dim);">1st Innings</small>
+                </div>
+              </div>
+              <div class="score-info">
+                <div class="runs-overs" style="color: var(--text-muted);">178/7</div>
+                <div class="overs-badge">(20.0 ov)</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="widget-meta">
+            🔥 Royal Strikers need <strong>9 runs in 16 balls</strong> to advance to the Grand Final.
+          </div>
+          
+          <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 0.82rem; color: var(--text-dim);">📍 Eden Gardens Stadium</span>
+            <a href="matches.html" class="btn btn-outline" style="font-size: 0.82rem; padding: 6px 14px;">Full Scorecard →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       LIVE & TRENDING MATCHES SECTION
+       ============================================================ -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-tag">Match Center</span>
+        <h2 class="section-title">Live & Upcoming Fixtures</h2>
+        <p class="section-desc">Keep track of ongoing tournament thrillers, real-time score updates, and upcoming rivalries.</p>
+      </div>
+
+      <div class="matches-grid" id="home-matches-grid">
+        <!-- Rendered dynamically by js/matches.js -->
+      </div>
+
+      <div style="text-align: center; margin-top: 40px;">
+        <a href="matches.html" class="btn btn-outline">Explore All Fixtures & Past Results →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       TOP TEAMS SHOWCASE
+       ============================================================ -->
+  <section class="section" style="background: rgba(12, 18, 32, 0.5);">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-tag">Championship Contenders</span>
+        <h2 class="section-title">Premier League Franchises</h2>
+        <p class="section-desc">World-class squads boasting international captains, hall-of-fame coaches, and passionate fans.</p>
+      </div>
+
+      <div class="teams-grid" id="teams-container">
+        <!-- Rendered dynamically by js/teams.js -->
+      </div>
+
+      <div style="text-align: center; margin-top: 40px;">
+        <a href="teams.html" class="btn btn-primary">View Full Squads & Player Bios →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       STAR PLAYERS HIGHLIGHT
+       ============================================================ -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-tag">Superstars</span>
+        <h2 class="section-title">Featured Players of the Tournament</h2>
+        <p class="section-desc">Top batsmen setting new strike-rate records, lethal fast bowlers, and explosive all-rounders.</p>
+      </div>
+
+      <div class="players-grid" id="home-players-grid">
+        <!-- Rendered dynamically by js/teams.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CRICKET GEAR & PRODUCTS STORE
+       ============================================================ -->
+  <section class="section" style="background: rgba(12, 18, 32, 0.6);">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-tag">Official Store</span>
+        <h2 class="section-title">Pro Cricket Gear & Apparel</h2>
+        <p class="section-desc">Handcrafted English willow bats, leather match balls, certified titanium helmets, and dry-fit team jerseys.</p>
+      </div>
+
+      <div class="products-grid" id="home-products-grid">
+        <!-- Rendered dynamically by js/products.js -->
+      </div>
+
+      <div style="text-align: center; margin-top: 40px;">
+        <a href="products.html" class="btn btn-gold">Browse Complete Cricket Catalogue 🏏</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CONTACT NUMBERS & HELPLINE HIGHLIGHT
+       ============================================================ -->
+  <section class="section">
+    <div class="container">
+      <div style="background: linear-gradient(135deg, rgba(6, 43, 27, 0.8), rgba(17, 26, 46, 0.9)); border: 1px solid var(--primary-700); border-radius: var(--radius-lg); padding: 50px 40px; box-shadow: var(--shadow-glow);">
+        <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 40px; align-items: center;" class="contact-highlight-grid">
+          <div>
+            <span class="badge badge-role" style="margin-bottom: 15px;">24/7 SUPPORT HOTLINE</span>
+            <h2 style="font-size: 2.2rem; margin-bottom: 15px;">Need Match Tickets or Cricket Gear Assistance?</h2>
+            <p style="color: var(--text-muted); font-size: 1.05rem; margin-bottom: 25px;">
+              Our dedicated cricket desk is available around the clock for academy admissions, match-day tickets, club gear orders, and sponsorship inquiries.
+            </p>
+            <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+              <a href="tel:+18002742538" class="btn btn-gold">📞 Call +1 (800) 274-2538</a>
+              <a href="https://wa.me/923001234567" target="_blank" class="btn btn-outline" style="border-color: #25d366; color: #25d366;">💬 WhatsApp Support</a>
+            </div>
+          </div>
+          <div style="background: rgba(0, 0, 0, 0.3); border: 1px solid var(--card-border); border-radius: var(--radius-md); padding: 25px;">
+            <h4 style="margin-bottom: 12px; color: #fff;">Direct Phone Numbers</h4>
+            <div style="margin-bottom: 12px; font-size: 0.95rem;">
+              <span style="color: var(--text-dim); display: block;">Toll-Free Global Helpline:</span>
+              <a href="tel:+18002742538" class="contact-number-link">+1 (800) 274-2538</a>
+            </div>
+            <div style="margin-bottom: 12px; font-size: 0.95rem;">
+              <span style="color: var(--text-dim); display: block;">Pakistan & Asia Region Desk:</span>
+              <a href="tel:+923001234567" class="contact-number-link">+92 (300) 123-4567</a>
+            </div>
+            <div style="font-size: 0.95rem;">
+              <span style="color: var(--text-dim); display: block;">Academy & Pitch Booking:</span>
+              <a href="tel:+923219876543" class="contact-number-link">+92 (321) 987-6543</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <a href="index.html" class="brand-logo" style="margin-bottom: 15px;">
+            <div class="brand-icon">🏏</div>
+            <div class="brand-name">CRIC<span>SPHERE</span></div>
+          </a>
+          <p style="color: var(--text-muted); font-size: 0.92rem; margin-bottom: 20px;">
+            Your ultimate cricket universe. Live tournament scorecards, team rosters, player biographies, pro cricket shop, and 24/7 dedicated support.
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Navigation</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="matches.html">Live Matches & Fixtures</a></li>
+            <li><a href="teams.html">Teams & Squad Players</a></li>
+            <li><a href="products.html">Cricket Store & Equipment</a></li>
+            <li><a href="contact.html">Contact & Support</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Cricket Gear</h4>
+          <ul class="footer-links">
+            <li><a href="products.html">English Willow Bats</a></li>
+            <li><a href="products.html">Match Leather Balls</a></li>
+            <li><a href="products.html">Batting Pads & Gloves</a></li>
+            <li><a href="products.html">Titanium Helmets</a></li>
+            <li><a href="products.html">Franchise Dry-Fit Jerseys</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Helpline Numbers</h4>
+          <div class="footer-hotline">
+            <h5>24/7 Customer Care</h5>
+            <a href="tel:+18002742538" style="color: var(--gold-400); font-weight: 800;">+1 (800) 274-2538</a>
+          </div>
+          <div class="footer-hotline">
+            <h5>WhatsApp Match Desk</h5>
+            <a href="https://wa.me/923001234567" target="_blank" style="color: #25d366; font-weight: 800;">+92 (300) 123-4567</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>© 2026 CRICSPHERE. All Rights Reserved. Powered by Supabase Backend.</div>
+        <div style="display: flex; gap: 20px;">
+          <a href="admin.html" style="color: var(--text-muted);">Admin Panel Access</a>
+          <a href="contact.html" style="color: var(--text-muted);">Terms & Privacy</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================================================
+       SHOPPING CART SLIDE-OVER DRAWER
+       ============================================================ -->
+  <div class="drawer-backdrop cart-backdrop"></div>
+  <div class="cart-drawer">
+    <div class="drawer-head">
+      <h3 style="display: flex; align-items: center; gap: 8px;">
+        🛒 Your Cricket Cart
+      </h3>
+      <button class="btn-icon close-cart-btn" aria-label="Close cart">✕</button>
+    </div>
+
+    <div class="drawer-body cart-items-container">
+      <!-- Items dynamically populated by js/app.js -->
+    </div>
+
+    <div class="drawer-foot">
+      <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px;">
+        <span style="color: var(--text-muted); font-size: 0.95rem;">Subtotal:</span>
+        <span class="cart-subtotal-val" style="font-size: 1.4rem; font-weight: 900; color: var(--gold-400);">$0.00</span>
+      </div>
+      <button class="btn btn-gold cart-checkout-btn" style="width: 100%;">
+        Proceed to Checkout →
+      </button>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       CHECKOUT MODAL
+       ============================================================ -->
+  <div class="modal-overlay" id="checkout-modal">
+    <div class="modal-card">
+      <button class="modal-close-btn" aria-label="Close modal">✕</button>
+      <h2 style="margin-bottom: 8px;">Order Cricket Equipment</h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 24px;">
+        Fill in your delivery details below to confirm your order.
+      </p>
+
+      <form onsubmit="window.handleCheckoutSubmit(event)">
+        <div class="form-group">
+          <label class="form-label">Full Name *</label>
+          <input type="text" name="customer_name" class="form-control" required placeholder="e.g. Babar Khan">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div class="form-group">
+            <label class="form-label">Email Address *</label>
+            <input type="email" name="customer_email" class="form-control" required placeholder="name@example.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone Number *</label>
+            <input type="tel" name="customer_phone" class="form-control" required placeholder="+92 (300) 123-4567">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Delivery Street Address *</label>
+          <textarea name="delivery_address" class="form-control" rows="3" required placeholder="Enter complete address with city & postal code"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Payment Method</label>
+          <select name="payment_method" class="form-control">
+            <option value="Cash on Delivery">Cash on Delivery (COD)</option>
+            <option value="Credit / Debit Card">Credit / Debit Card</option>
+            <option value="Direct Bank Transfer">Direct Bank Transfer</option>
+          </select>
+        </div>
+
+        <div style="background: rgba(0, 0, 0, 0.3); padding: 14px; border-radius: var(--radius-sm); display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <span style="color: var(--text-muted);">Total Payable:</span>
+          <span class="checkout-total-val" style="font-size: 1.3rem; font-weight: 900; color: var(--gold-400);">$0.00</span>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%;">
+          Place Cricket Order
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       PLAYER DETAIL MODAL
+       ============================================================ -->
+  <div class="modal-overlay" id="player-detail-modal">
+    <div class="modal-card">
+      <button class="modal-close-btn" aria-label="Close modal">✕</button>
+      <div class="player-modal-content">
+        <!-- Rendered by js/teams.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/supabase-config.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/matches.js"></script>
+  <script src="js/teams.js"></script>
+  <script src="js/products.js"></script>
+</body>
+</html>

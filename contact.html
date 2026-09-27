@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Numbers & Inquiries | CRICSPHERE</title>
+  <meta name="description" content="Reach the CricSphere match desk, 24/7 helpline numbers, WhatsApp support, academy coaching admissions, and stadium ticket office.">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+
+  <!-- Supabase JS Client v2 -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- TOP LIVE SCORE TICKER -->
+  <div class="live-ticker">
+    <div class="container">
+      <div class="ticker-inner">
+        <div class="ticker-label">LIVE MATCHES</div>
+        <div class="ticker-scroll">
+          <div class="ticker-item">Loading live cricket action...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-wrap">
+        <a href="index.html" class="brand-logo">
+          <div class="brand-icon">🏏</div>
+          <div class="brand-name">CRIC<span>SPHERE</span></div>
+        </a>
+
+        <nav class="nav-menu">
+          <a href="index.html" class="nav-link">Home</a>
+          <a href="matches.html" class="nav-link">Matches & Scores</a>
+          <a href="teams.html" class="nav-link">Teams & Players</a>
+          <a href="products.html" class="nav-link">Gear & Store</a>
+          <a href="contact.html" class="nav-link active">Contact & Help</a>
+        </nav>
+
+        <div class="header-actions">
+          <button class="cart-trigger" aria-label="Open Shopping Cart">
+            🛒
+            <span class="cart-badge" style="display: none;">0</span>
+          </button>
+          <a href="admin.html" class="btn btn-admin">⚙️ Admin</a>
+          <button class="mobile-nav-toggle" aria-label="Toggle navigation">☰</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- BANNER -->
+  <section class="section" style="padding: 50px 0 30px; background: linear-gradient(180deg, rgba(6, 43, 27, 0.3) 0%, transparent 100%);">
+    <div class="container">
+      <div style="text-align: center; max-width: 700px; margin: 0 auto 30px;">
+        <span class="section-tag">24/7 Cricket Desk</span>
+        <h1 class="section-title">Official Contact Numbers & <span class="text-gradient">Support Desk</span></h1>
+        <p class="section-desc">
+          Have questions about live match fixtures, academy admissions, equipment orders, or corporate sponsorship? Reach our international cricket helpline directly.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT GRID SECTION -->
+  <section class="section" style="padding-top: 10px;">
+    <div class="container">
+      <div class="contact-grid">
+        <!-- Left: Contact Details Cards -->
+        <div class="contact-cards-stack">
+          <!-- Card 1: 24/7 Toll-Free Hotline -->
+          <div class="contact-card-box">
+            <div class="contact-icon-box">📞</div>
+            <div class="contact-card-info">
+              <h4>24/7 Global Cricket Helpline</h4>
+              <p>For urgent match schedule updates, score queries & live updates.</p>
+              <a href="tel:+18002742538" class="contact-number-link">+1 (800) 274-2538</a>
+            </div>
+          </div>
+
+          <!-- Card 2: WhatsApp Match Desk -->
+          <div class="contact-card-box whatsapp-box">
+            <div class="contact-icon-box">💬</div>
+            <div class="contact-card-info">
+              <h4 style="color: #25d366;">Instant WhatsApp Support Desk</h4>
+              <p>Chat directly with our match organizers for quick responses.</p>
+              <a href="https://wa.me/923001234567" target="_blank" class="contact-number-link" style="color: #25d366;">+92 (300) 123-4567</a>
+            </div>
+          </div>
+
+          <!-- Card 3: Academy & Coaching Hotline -->
+          <div class="contact-card-box">
+            <div class="contact-icon-box">🏏</div>
+            <div class="contact-card-info">
+              <h4>Cricket Academy & Coaching Admissions</h4>
+              <p>Enrollment for junior camps, net bowling sessions, and batting masterclasses.</p>
+              <a href="tel:+923219876543" class="contact-number-link">+92 (321) 987-6543</a>
+            </div>
+          </div>
+
+          <!-- Card 4: Ticket Office & Ground Booking -->
+          <div class="contact-card-box">
+            <div class="contact-icon-box">🎟️</div>
+            <div class="contact-card-info">
+              <h4>Stadium Ticket Office & Ground Booking</h4>
+              <p>VIP hospitality enclosures, club tournament pitch hire, and bulk passes.</p>
+              <a href="tel:+18002742539" class="contact-number-link">+1 (800) 274-2539</a>
+            </div>
+          </div>
+
+          <!-- Card 5: Email Support -->
+          <div class="contact-card-box">
+            <div class="contact-icon-box">✉️</div>
+            <div class="contact-card-info">
+              <h4>Official Email Inquiries</h4>
+              <p>General inquiries, press & tournament coverage:</p>
+              <div style="font-weight: 700; color: #fff;">support@cricsphere.com</div>
+              <div style="font-weight: 700; color: var(--gold-400);">admin@cricsphere.com</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Inquiry Submission Form -->
+        <div class="contact-form-box">
+          <span class="badge badge-role" style="margin-bottom: 12px;">DIRECT INQUIRY DESK</span>
+          <h2 style="font-size: 1.8rem; margin-bottom: 8px;">Send Us an Official Message</h2>
+          <p style="color: var(--text-muted); font-size: 0.92rem; margin-bottom: 25px;">
+            Submitted messages are automatically routed and saved to our Supabase database for immediate team followup.
+          </p>
+
+          <form id="contact-inquiry-form" onsubmit="handleInquirySubmit(event)">
+            <div class="form-group">
+              <label class="form-label">Full Name *</label>
+              <input type="text" name="name" class="form-control" required placeholder="e.g. Imran Ali">
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+              <div class="form-group">
+                <label class="form-label">Phone Number *</label>
+                <input type="tel" name="phone" class="form-control" required placeholder="+92 (300) 123-4567">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Email Address *</label>
+                <input type="email" name="email" class="form-control" required placeholder="name@example.com">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Inquiry Subject *</label>
+              <select name="subject" class="form-control" required>
+                <option value="General Inquiry">General Cricket Inquiry</option>
+                <option value="Match Tickets">Match Tickets & Hospitality Passes</option>
+                <option value="Academy Enrollment">Cricket Academy & Coaching Enrollment</option>
+                <option value="Equipment Order">Cricket Gear & Store Order Support</option>
+                <option value="Franchise Sponsorship">Franchise & Tournament Sponsorship</option>
+                <option value="Ground Booking">Ground / Turf Pitch Booking</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Your Message *</label>
+              <textarea name="message" class="form-control" rows="4" required placeholder="Provide details regarding your inquiry or requested dates..."></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1rem; padding: 14px;">
+              ✉️ Send Official Inquiry
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ SECTION -->
+  <section class="section" style="background: rgba(12, 18, 32, 0.5);">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-tag">Common Questions</span>
+        <h2 class="section-title">Frequently Asked Questions</h2>
+        <p class="section-desc">Quick information about tournament attendance, equipment shipping, and academy coaching.</p>
+      </div>
+
+      <div style="max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px;">
+        <div style="background: var(--card-bg); border: 1px solid var(--card-border); padding: 20px; border-radius: var(--radius-sm);">
+          <h4 style="font-size: 1.05rem; margin-bottom: 8px; color: var(--gold-400);">How do I track live scores during tournament matches?</h4>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">
+            Live scores are updated in real-time on our top ticker banner and dedicated Matches & Scores page, including ball-by-ball summaries and run rates.
+          </p>
+        </div>
+
+        <div style="background: var(--card-bg); border: 1px solid var(--card-border); padding: 20px; border-radius: var(--radius-sm);">
+          <h4 style="font-size: 1.05rem; margin-bottom: 8px; color: var(--gold-400);">Are the English Willow bats in the store officially match-ready?</h4>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">
+            Yes! All Grade 1 English Willow bats come machine pre-knocked and oiled with extratec protective facing. We also offer complimentary hand-knocking service upon request.
+          </p>
+        </div>
+
+        <div style="background: var(--card-bg); border: 1px solid var(--card-border); padding: 20px; border-radius: var(--radius-sm);">
+          <h4 style="font-size: 1.05rem; margin-bottom: 8px; color: var(--gold-400);">How do academy training admissions work?</h4>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">
+            We offer age-group programs (U13, U16, U19, and Seniors) with certified ICC Level 3 coaches. You can call our Academy hotline directly at +92 (321) 987-6543 to arrange a trial session.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <a href="index.html" class="brand-logo" style="margin-bottom: 15px;">
+            <div class="brand-icon">🏏</div>
+            <div class="brand-name">CRIC<span>SPHERE</span></div>
+          </a>
+          <p style="color: var(--text-muted); font-size: 0.92rem; margin-bottom: 20px;">
+            Your ultimate cricket universe. Live tournament scorecards, team rosters, player biographies, pro cricket shop, and 24/7 dedicated support.
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Navigation</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="matches.html">Live Matches & Fixtures</a></li>
+            <li><a href="teams.html">Teams & Squad Players</a></li>
+            <li><a href="products.html">Cricket Store & Equipment</a></li>
+            <li><a href="contact.html">Contact & Support</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Cricket Gear</h4>
+          <ul class="footer-links">
+            <li><a href="products.html">English Willow Bats</a></li>
+            <li><a href="products.html">Match Leather Balls</a></li>
+            <li><a href="products.html">Batting Pads & Gloves</a></li>
+            <li><a href="products.html">Titanium Helmets</a></li>
+            <li><a href="products.html">Franchise Dry-Fit Jerseys</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Helpline Numbers</h4>
+          <div class="footer-hotline">
+            <h5>24/7 Customer Care</h5>
+            <a href="tel:+18002742538" style="color: var(--gold-400); font-weight: 800;">+1 (800) 274-2538</a>
+          </div>
+          <div class="footer-hotline">
+            <h5>WhatsApp Match Desk</h5>
+            <a href="https://wa.me/923001234567" target="_blank" style="color: #25d366; font-weight: 800;">+92 (300) 123-4567</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>© 2026 CRICSPHERE. All Rights Reserved. Powered by Supabase Backend.</div>
+        <div style="display: flex; gap: 20px;">
+          <a href="admin.html" style="color: var(--text-muted);">Admin Panel Access</a>
+          <a href="contact.html" style="color: var(--text-muted);">Terms & Privacy</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- CART SLIDE-OVER DRAWER -->
+  <div class="drawer-backdrop cart-backdrop"></div>
+  <div class="cart-drawer">
+    <div class="drawer-head">
+      <h3 style="display: flex; align-items: center; gap: 8px;">🛒 Your Cricket Cart</h3>
+      <button class="btn-icon close-cart-btn" aria-label="Close cart">✕</button>
+    </div>
+    <div class="drawer-body cart-items-container"></div>
+    <div class="drawer-foot">
+      <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px;">
+        <span style="color: var(--text-muted); font-size: 0.95rem;">Subtotal:</span>
+        <span class="cart-subtotal-val" style="font-size: 1.4rem; font-weight: 900; color: var(--gold-400);">$0.00</span>
+      </div>
+      <button class="btn btn-gold cart-checkout-btn" style="width: 100%;">Proceed to Checkout →</button>
+    </div>
+  </div>
+
+  <!-- CHECKOUT MODAL -->
+  <div class="modal-overlay" id="checkout-modal">
+    <div class="modal-card">
+      <button class="modal-close-btn" aria-label="Close modal">✕</button>
+      <h2 style="margin-bottom: 8px;">Order Cricket Equipment</h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 24px;">Fill in your delivery details below to confirm your order.</p>
+
+      <form onsubmit="window.handleCheckoutSubmit(event)">
+        <div class="form-group">
+          <label class="form-label">Full Name *</label>
+          <input type="text" name="customer_name" class="form-control" required placeholder="e.g. Babar Khan">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div class="form-group">
+            <label class="form-label">Email Address *</label>
+            <input type="email" name="customer_email" class="form-control" required placeholder="name@example.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone Number *</label>
+            <input type="tel" name="customer_phone" class="form-control" required placeholder="+92 (300) 123-4567">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Delivery Street Address *</label>
+          <textarea name="delivery_address" class="form-control" rows="3" required placeholder="Enter complete address with city & postal code"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Payment Method</label>
+          <select name="payment_method" class="form-control">
+            <option value="Cash on Delivery">Cash on Delivery (COD)</option>
+            <option value="Credit / Debit Card">Credit / Debit Card</option>
+            <option value="Direct Bank Transfer">Direct Bank Transfer</option>
+          </select>
+        </div>
+
+        <div style="background: rgba(0, 0, 0, 0.3); padding: 14px; border-radius: var(--radius-sm); display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <span style="color: var(--text-muted);">Total Payable:</span>
+          <span class="checkout-total-val" style="font-size: 1.3rem; font-weight: 900; color: var(--gold-400);">$0.00</span>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Place Cricket Order</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/supabase-config.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    async function handleInquirySubmit(e) {
+      e.preventDefault();
+      const form = e.target;
+      const submitBtn = form.querySelector("button[type='submit']");
+
+      const inquiryData = {
+        name: form.name.value.trim(),
+        phone: form.phone.value.trim(),
+        email: form.email.value.trim(),
+        subject: form.subject.value,
+        message: form.message.value.trim(),
+        status: "new"
+      };
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Submitting Inquiry...";
+
+      try {
+        const res = await window.CricDB.saveInquiry(inquiryData);
+        window.showToast("✓ Inquiry submitted! Our cricket desk will contact you within 24 hours.", "gold");
+        form.reset();
+      } catch (err) {
+        window.showToast("Could not submit inquiry. Please try again.", "error");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "✉️ Send Official Inquiry";
+      }
+    }
+  </script>
+</body>
+</html>

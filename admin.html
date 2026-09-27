@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard & Live Match Control Room | CRICSPHERE</title>
+  <meta name="description" content="Secure administrative panel to manage live cricket matches, team franchises, player profiles, merchandise, and inquiries.">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+
+  <!-- Supabase JS Client v2 -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body style="background: var(--dark-950);">
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-wrap">
+        <a href="index.html" class="brand-logo">
+          <div class="brand-icon">🏏</div>
+          <div class="brand-name">CRIC<span>SPHERE</span> <small style="font-size: 0.75rem; color: var(--gold-400); margin-left: 6px;">ADMIN</small></div>
+        </a>
+
+        <div style="display: flex; align-items: center; gap: 15px;">
+          <a href="index.html" class="btn btn-outline" style="font-size: 0.85rem;">← Back to Website</a>
+          <button id="admin-logout-btn" class="btn btn-admin" style="font-size: 0.85rem;">Log Out</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       ADMIN AUTH / PIN LOGIN VIEW
+       ============================================================ -->
+  <section id="admin-auth-view" style="min-height: 80vh; display: flex; align-items: center; justify-content: center; padding: 40px 20px;">
+    <div style="background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius-lg); padding: 40px; max-width: 420px; width: 100%; text-align: center; box-shadow: var(--shadow-sm);">
+      <div style="font-size: 3rem; margin-bottom: 15px;">🔒</div>
+      <h2 style="font-size: 1.8rem; margin-bottom: 8px;">Admin Control Room</h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 25px;">
+        Enter your administrative security PIN to manage live scoreboards, teams, players, and products.
+      </p>
+
+      <form id="admin-pin-form">
+        <div class="form-group" style="text-align: left;">
+          <label class="form-label">Security PIN (Default: 1234)</label>
+          <input type="password" name="pin" class="form-control" required placeholder="Enter PIN..." style="font-size: 1.2rem; letter-spacing: 0.2em; text-align: center;">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1rem; padding: 12px;">
+          Unlock Dashboard →
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ADMIN DASHBOARD VIEW
+       ============================================================ -->
+  <section id="admin-dashboard-view" style="display: none; padding: 40px 0 80px;">
+    <div class="container">
+      
+      <!-- Top Bar: Supabase Status & Database Info -->
+      <div class="admin-header-bar">
+        <div>
+          <h1 style="font-size: 2rem; margin-bottom: 4px;">Management Dashboard</h1>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">
+            Control match scoreboards, franchise rosters, equipment inventory, and customer messages.
+          </p>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+          <span id="db-status-badge" class="badge badge-upcoming">CHECKING SUPABASE...</span>
+          <button class="btn btn-outline" style="font-size: 0.82rem; padding: 6px 12px;" onclick="window.checkDatabaseHealth()">🔄 Test DB</button>
+          <button class="btn btn-gold" style="font-size: 0.82rem; padding: 6px 14px;" onclick="document.querySelector('#sql-setup-modal').classList.add('active')">📋 View Supabase SQL</button>
+        </div>
+      </div>
+
+      <!-- Supabase Info Notice -->
+      <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: var(--radius-sm); padding: 14px 20px; margin-bottom: 30px; font-size: 0.88rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: gap; gap: 10px;">
+        <div>
+          <strong>⚡ Supabase Project Backend:</strong> <code style="color: var(--gold-400);">mdgyqpfgirmbdgjvulif.supabase.co</code>
+          <div id="db-status-message" style="color: var(--text-muted); margin-top: 4px;">Checking status...</div>
+        </div>
+        <a href="https://supabase.com/dashboard/project/mdgyqpfgirmbdgjvulif/sql/new" target="_blank" class="btn btn-outline" style="font-size: 0.8rem; padding: 6px 12px;">Open Supabase SQL Editor ↗</a>
+      </div>
+
+      <!-- Metrics Row -->
+      <div class="admin-stats-grid">
+        <div class="admin-stat-card">
+          <h4>Match Center</h4>
+          <div class="val text-gold" id="metric-matches">0</div>
+        </div>
+        <div class="admin-stat-card">
+          <h4>Franchise Teams</h4>
+          <div class="val text-green" id="metric-teams">0</div>
+        </div>
+        <div class="admin-stat-card">
+          <h4>Registered Players</h4>
+          <div class="val" id="metric-players">0</div>
+        </div>
+        <div class="admin-stat-card">
+          <h4>Store Products</h4>
+          <div class="val" id="metric-products">0</div>
+        </div>
+        <div class="admin-stat-card">
+          <h4>Customer Inquiries</h4>
+          <div class="val" id="metric-inquiries">0</div>
+        </div>
+        <div class="admin-stat-card">
+          <h4>Gear Orders</h4>
+          <div class="val text-gold" id="metric-orders">0</div>
+        </div>
+      </div>
+
+      <!-- Admin Tabs Navigation -->
+      <div class="admin-nav-tabs">
+        <button class="admin-tab-btn active" data-view="panel-matches">🏏 Matches & Live Scores</button>
+        <button class="admin-tab-btn" data-view="panel-teams">🏆 Teams</button>
+        <button class="admin-tab-btn" data-view="panel-players">👤 Players</button>
+        <button class="admin-tab-btn" data-view="panel-products">🛍️ Store Equipment</button>
+        <button class="admin-tab-btn" data-view="panel-inquiries">✉️ Inquiries</button>
+        <button class="admin-tab-btn" data-view="panel-orders">📦 Orders</button>
+      </div>
+
+      <!-- ==========================================
+           TAB 1: MATCHES & LIVE SCORES
+           ========================================== -->
+      <div class="admin-view-panel" id="panel-matches">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h3>Match Fixtures & Real-time Live Scores</h3>
+          <button class="btn btn-primary" onclick="document.querySelector('#add-match-modal').classList.add('active')">+ Schedule New Match</button>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Match Title</th>
+                <th>Teams</th>
+                <th>Status</th>
+                <th>Score (Overs)</th>
+                <th>Summary / Target</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-matches-tbody">
+              <!-- Injected by js/admin.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           TAB 2: TEAMS
+           ========================================== -->
+      <div class="admin-view-panel" id="panel-teams" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h3>Tournament Franchises</h3>
+          <button class="btn btn-primary" onclick="document.querySelector('#add-team-modal').classList.add('active')">+ Add Team</button>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Logo</th>
+                <th>Team Name</th>
+                <th>Captain</th>
+                <th>Coach</th>
+                <th>Trophies</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-teams-tbody">
+              <!-- Injected by js/admin.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           TAB 3: PLAYERS
+           ========================================== -->
+      <div class="admin-view-panel" id="panel-players" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h3>Squad Players Roster</h3>
+          <button class="btn btn-primary" onclick="document.querySelector('#add-player-modal').classList.add('active')">+ Register Player</button>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Photo</th>
+                <th>Name</th>
+                <th>Role</th>
+                <th>Runs</th>
+                <th>Wickets</th>
+                <th>Strike Rate / Avg</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-players-tbody">
+              <!-- Injected by js/admin.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           TAB 4: PRODUCTS
+           ========================================== -->
+      <div class="admin-view-panel" id="panel-products" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h3>Cricket Store Inventory</h3>
+          <button class="btn btn-primary" onclick="document.querySelector('#add-product-modal').classList.add('active')">+ Add Product</button>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Image</th>
+                <th>Product Name</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-products-tbody">
+              <!-- Injected by js/admin.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           TAB 5: INQUIRIES
+           ========================================== -->
+      <div class="admin-view-panel" id="panel-inquiries" style="display: none;">
+        <div style="margin-bottom: 20px;">
+          <h3>Customer Contact & Academy Inquiries</h3>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Sender</th>
+                <th>Email</th>
+                <th>Subject</th>
+                <th>Message</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="admin-inquiries-tbody">
+              <!-- Injected by js/admin.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           TAB 6: ORDERS
+           ========================================== -->
+      <div class="admin-view-panel" id="panel-orders" style="display: none;">
+        <div style="margin-bottom: 20px;">
+          <h3>Customer Equipment Orders</h3>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Customer</th>
+                <th>Address</th>
+                <th>Items Ordered</th>
+                <th>Total</th>
+                <th>Order Status</th>
+              </tr>
+            </thead>
+            <tbody id="admin-orders-tbody">
+              <!-- Injected by js/admin.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       MODAL: LIVE SCORECARD EDITOR
+       ============================================================ -->
+  <div class="modal-overlay" id="score-modal">
+    <div class="modal-card">
+      <button class="modal-close-btn" aria-label="Close modal">✕</button>
+      <h2 style="margin-bottom: 8px;">⚡ Update Live Match Scorecard</h2>
+      <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 20px;">
+        Update score, overs, batsmen, and bowlers in real-time. Changes instantly reflect across website.
+      </p>
+
+      <form id="score-editor-form" onsubmit="window.handleScoreUpdateSubmit(event)">
+        <input type="hidden" name="match_id">
+
+        <div class="form-group">
+          <label class="form-label">Match Status</label>
+          <select name="status" class="form-control">
+            <option value="upcoming">Upcoming</option>
+            <option value="live">🔴 Live Now</option>
+            <option value="completed">🏆 Completed / Finished</option>
+          </select>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div class="form-group">
+            <label class="form-label">Team 1 Score (e.g. 186/4)</label>
+            <input type="text" name="team1_score" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Team 1 Overs (e.g. 17.2)</label>
+            <input type="text" name="team1_overs" class="form-control" required>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div class="form-group">
+            <label class="form-label">Team 2 Score (e.g. 178/7)</label>
+            <input type="text" name="team2_score" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Team 2 Overs (e.g. 20.0)</label>
+            <input type="text" name="team2_overs" class="form-control" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Current Batting Team</label>
+          <input type="text" name="current_batting_team" class="form-control" placeholder="e.g. Royal Strikers">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div class="form-group">
+            <label class="form-label">Active Batsman on Crease</label>
+            <input type="text" name="current_batsman" class="form-control" placeholder="e.g. Virat Sharma (78* off 46)">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Active Bowler Figures</label>
+            <input type="text" name="current_bowler" class="form-control" placeholder="e.g. Shaheen Afridi (2/34)">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div class="form-group">
+            <label class="form-label">Current Run Rate (CRR)</label>
+            <input type="number" step="0.01" name="crr" class="form-control" placeholder="10.73">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Required Run Rate (RRR)</label>
+            <input type="number" step="0.01" name="rrr" class="form-control" placeholder="3.38">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Match Summary / Situation</label>
+          <input type="text" name="result_summary" class="form-control" placeholder="e.g. Royal Strikers need 9 runs in 16 balls">
+        </div>
+
+        <button type="submit" class="btn btn-gold" style="width: 100%; font-size: 1rem; padding: 12px;">
+          ⚡ Save Real-Time Scorecard
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       MODAL: ADD MATCH FIXTURE
+       ============================================================ -->
+  <div class="modal-overlay" id="add-match-modal">
+    <div class="modal-card">
+      <button class="modal-close-btn" aria-label="Close modal">✕</button>
+      <h2 style="margin-bottom: 8px;">Schedule New Cricket Match</h2>
+      <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 20px;">Add fixture details for tournament calendar.</p>
+
+      <form onsubmit="window.handleCreateMatchSubmit(event)">
+        <div class="form-group">
+          <label class="form-label">Match Title *</label>
+          <input type="text" name="title" class="form-control" required placeholder="e.g. PCL Semi-Final 2">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div class="form-group">
+            <label class="form-label">Tournament *</label>
+            <input type="text" name="tournament" class="form-control" required placeholder="Premier Cricket League">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Match Format *</label>
+            <select name="format" class="form-control">
+              <option value="T20">T20</option>
+              <option value="ODI">ODI</option>
+              <option value="Test">Test Match</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 14px;">
+          <div class="form-group">
+            <label class="form-label">Team 1 Name *</label>
+            <input type="text" name="team1_name" class="form-control" required placeholder="Royal Strikers">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Short Code *</label>
+            <input type="text" name="team1_short" class="form-control" required placeholder="RS">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Team 1 Logo URL</label>
+          <input type="url" name="team1_logo" class="form-control" placeholder="https://...">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 14px;">
+          <div class="form-group">
+            <label class="form-label">Team 2 Name *</label>
+            <input type="text" name="team2_name" class="form-control" required placeholder="Thunder Titans">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Short Code *</label>
+            <input type="text" name="team2_short" class="form-control" required placeholder="TT">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Team 2 Logo URL</label>
+          <input type="url" name="team2_logo" class="form-control" placeholder="https://...">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div class="form-group">
+            <label class="form-label">Venue / Stadium *</label>
+            <input type="text" name="venue" class="form-control" required placeholder="National Stadium">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Status</label>
+            <select name="status" class="form-control">
+              <option value="upcoming">Upcoming</option>
+              <option value="live">Live</option>
+              <option value="completed">Completed</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Notes / Result Summary</label>
+          <input type="text" name="result_summary" class="form-control" placeholder="Match starts at 07:00 PM">
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Create Match Fixture</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       MODAL: ADD TEAM
+       ============================================================ -->
+  <div class="modal-overlay" id="add-team-modal">
+    <div class="modal-card">
+      <button class="modal-close-btn" aria-label="Close modal">✕</button>
+      <h2 style="margin-bottom: 8px;">Add Franchise Team</h2>
+
+      <form onsubmit="window.handleCreateTeamSubmit(event)">
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 14px;">
+          <div class="form-group">
+            <label class="form-label">Team Name *</label>
+            <input type="text" name="name" class="form-control" required placeholder="Desert Warriors">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Short Code *</label>
+            <input type="text" name="short_name" class="form-control" required placeholder="DW">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div class="form-group">
+            <label class="form-label">Captain</label>
+            <input type="text" name="captain" class="form-control" placeholder="Babar Azam">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Head Coach</label>
+            <input type="text" name="coach" class="form-control" placeholder="Gary Kirsten">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 14px;">
+          <div class="form-group">
+            <label class="form-label">Home Ground</label>
+            <input type="text" name="home_ground" class="form-control" placeholder="Oasis Arena">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Trophies</label>
+            <input type="number" name="trophies" class="form-control" value="0">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Logo Image URL</label>
+          <input type="url" name="logo_url" class="form-control" placeholder="https://...">
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Save Team</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       MODAL: ADD PLAYER
+       ============================================================ -->
+  <div class="modal-overlay" id="add-player-modal">
+    <div class="modal-card">
+      <button class="modal-close-btn" aria-label="Close modal">✕</button>
+      <h2 style="margin-bottom: 8px;">Register Squad Player</h2>
+
+      <form onsubmit="window.handleCreatePlayerSubmit(event)">
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 14px;">
+          <div class="form-group">
+            <label class="form-label">Player Name *</label>
+            <input type="text" name="name" class="form-control" required placeholder="Shaheen Afridi">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Jersey #</label>
+            <input type="number" name="jersey_number" class="form-control" placeholder="10">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div class="form-group">
+            <label class="form-label">Role *</label>
+            <select name="role" class="form-control">
+              <option value="Batsman">Batsman</option>
+              <option value="Bowler">Bowler</option>
+              <option value="All-Rounder">All-Rounder</option>
+              <option value="Wicket-Keeper">Wicket-Keeper</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Batting Style</label>
+            <input type="text" name="batting_style" class="form-control" placeholder="Right-hand bat">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Bowling Style</label>
+          <input type="text" name="bowling_style" class="form-control" placeholder="Left-arm fast">
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+          <div class="form-group">
+            <label class="form-label">Matches</label>
+            <input type="number" name="matches_played" class="form-control" value="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Runs</label>
+            <input type="number" name="runs" class="form-control" value="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Wickets</label>
+            <input type="number" name="wickets" class="form-control" value="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label">HS</label>
+            <input type="text" name="highest_score" class="form-control" value="0">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div class="form-group">
+            <label class="form-label">Strike Rate</label>
+            <input type="number" step="0.01" name="strike_rate" class="form-control" placeholder="140.0">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Average</label>
+            <input type="number" step="0.01" name="batting_average" class="form-control" placeholder="45.0">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Photo URL</label>
+          <input type="url" name="photo_url" class="form-control" placeholder="https://...">
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Save Player</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       MODAL: ADD PRODUCT
+       ============================================================ -->
+  <div class="modal-overlay" id="add-product-modal">
+    <div class="modal-card">
+      <button class="modal-close-btn" aria-label="Close modal">✕</button>
+      <h2 style="margin-bottom: 8px;">Add Cricket Gear to Store</h2>
+
+      <form onsubmit="window.handleCreateProductSubmit(event)">
+        <div class="form-group">
+          <label class="form-label">Product Name *</label>
+          <input type="text" name="name" class="form-control" required placeholder="Pro Grade 1 English Willow Bat">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div class="form-group">
+            <label class="form-label">Category *</label>
+            <select name="category" class="form-control">
+              <option value="Bats">Bats</option>
+              <option value="Balls">Balls</option>
+              <option value="Protective">Protective Gear</option>
+              <option value="Apparel">Apparel</option>
+              <option value="Footwear">Footwear</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Stock Quantity</label>
+            <input type="number" name="stock" class="form-control" value="15">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px;">
+          <div class="form-group">
+            <label class="form-label">Price ($) *</label>
+            <input type="number" step="0.01" name="price" class="form-control" required placeholder="249.99">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Discount Price ($)</label>
+            <input type="number" step="0.01" name="discount_price" class="form-control" placeholder="199.99">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Rating</label>
+            <input type="number" step="0.1" name="rating" class="form-control" value="4.9">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Image URL</label>
+          <input type="url" name="image_url" class="form-control" placeholder="https://...">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea name="description" class="form-control" rows="3" placeholder="Crafted from premium hand-selected willow..."></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Add Product to Shop</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       MODAL: SUPABASE SQL SETUP VIEWER
+       ============================================================ -->
+  <div class="modal-overlay" id="sql-setup-modal">
+    <div class="modal-card" style="max-width: 750px;">
+      <button class="modal-close-btn" aria-label="Close modal">✕</button>
+      <h2 style="margin-bottom: 8px;">Supabase SQL Database Setup</h2>
+      <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 16px;">
+        To activate full cloud persistence in your Supabase project (<code>mdgyqpfgirmbdgjvulif</code>), copy and run the SQL below in your Supabase SQL Editor:
+      </p>
+
+      <div style="background: #090e1a; border: 1px solid var(--card-border); padding: 15px; border-radius: var(--radius-sm); font-family: monospace; font-size: 0.82rem; color: #a7f3d0; max-height: 250px; overflow-y: auto; margin-bottom: 16px;">
+        <code>
+          -- Check schema.sql in project root<br>
+          -- Tables: teams, players, matches, products, inquiries, orders<br>
+          -- RLS policies enabled for public anon access<br>
+          -- Sample data included
+        </code>
+      </div>
+
+      <div style="display: flex; gap: 12px;">
+        <a href="https://supabase.com/dashboard/project/mdgyqpfgirmbdgjvulif/sql/new" target="_blank" class="btn btn-gold" style="flex: 1;">
+          🚀 Open Supabase SQL Editor
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/supabase-config.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
